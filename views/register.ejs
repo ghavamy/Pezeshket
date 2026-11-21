@@ -1,0 +1,131 @@
+<%- include('partials/head') %>
+
+<div class="auth-page">
+  <div class="auth-card" style="max-width:520px;">
+    <div class="auth-logo">
+      <a class="logo" href="/">پزشکت<span>+</span></a>
+    </div>
+    <h2>حساب بساز</h2>
+    <p class="subtitle">رایگان است و کمتر از یک دقیقه طول می‌کشه</p>
+
+    <!-- User type selector -->
+    <div style="margin-bottom:24px;">
+      <p style="font-size:13px;font-weight:600;margin-bottom:10px;">ثبت‌نام به عنوان:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="consult-type active" id="typePatient" onclick="selectType('patient')" style="padding:16px;cursor:pointer;">
+          <div style="font-size:28px;margin-bottom:6px;">🙋</div>
+          <strong style="font-size:14px;display:block;">بیمار</strong>
+          <span style="font-size:12px;color:var(--text-muted);">دنبال پزشک هستم</span>
+        </div>
+        <div class="consult-type" id="typeDoctor" onclick="selectType('doctor')" style="padding:16px;cursor:pointer;">
+          <div style="font-size:28px;margin-bottom:6px;">🩺</div>
+          <strong style="font-size:14px;display:block;">پزشک</strong>
+          <span style="font-size:12px;color:var(--text-muted);">می‌خواهم عضو شوم</span>
+        </div>
+      </div>
+    </div>
+
+    <form method="POST" action="/register">
+      <input type="hidden" name="userType" id="userTypeInput" value="patient">
+      <div class="form-row">
+        <div class="form-group">
+          <label>نام</label>
+          <input type="text" name="firstName" placeholder="نام" required
+                 style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;outline:none;">
+        </div>
+        <div class="form-group">
+          <label>نام خانوادگی</label>
+          <input type="text" name="lastName" placeholder="نام خانوادگی" required
+                 style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;outline:none;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>شماره موبایل</label>
+        <div class="input-icon-wrap">
+          <span class="icon">📱</span>
+          <input type="tel" name="phone" placeholder="۰۹۱۲۰۰۰۰۰۰۰" required
+                 style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px 12px 40px;outline:none;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ایمیل <small style="color:var(--text-muted);font-weight:400;">(اختیاری)</small></label>
+        <div class="input-icon-wrap">
+          <span class="icon">📧</span>
+          <input type="email" name="email" placeholder="example@email.com"
+                 style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px 12px 40px;outline:none;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>رمز عبور</label>
+        <div class="input-icon-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" name="password" placeholder="حداقل ۸ کاراکتر" required
+                 id="passInput" oninput="checkPass(this.value)"
+                 style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px 12px 40px;outline:none;">
+        </div>
+        <div style="display:flex;gap:4px;margin-top:8px;">
+          <div id="ps1" style="height:4px;flex:1;border-radius:4px;background:var(--border);transition:background .3s;"></div>
+          <div id="ps2" style="height:4px;flex:1;border-radius:4px;background:var(--border);transition:background .3s;"></div>
+          <div id="ps3" style="height:4px;flex:1;border-radius:4px;background:var(--border);transition:background .3s;"></div>
+          <div id="ps4" style="height:4px;flex:1;border-radius:4px;background:var(--border);transition:background .3s;"></div>
+        </div>
+        <small id="passHint" style="color:var(--text-muted);font-size:11px;"></small>
+      </div>
+
+      <!-- Doctor-only fields -->
+      <div id="doctorFields" style="display:none;">
+        <div class="form-group">
+          <label>کد نظام پزشکی</label>
+          <input type="text" name="licenseCode" placeholder="شماره پروانه"
+                 style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;outline:none;">
+        </div>
+        <div class="form-group">
+          <label>تخصص</label>
+          <select name="specialty"
+                  style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;outline:none;">
+            <option value="">انتخاب تخصص…</option>
+            <% specialties.forEach(s => { %><option><%= s %></option><% }) %>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:13px;">
+        <input type="checkbox" name="agree" id="agree" required>
+        <label for="agree">با <a href="#" style="color:var(--blue);">قوانین</a> و <a href="#" style="color:var(--blue);">حریم خصوصی</a> موافقم</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg">ثبت‌نام</button>
+    </form>
+
+    <div class="auth-divider">یا</div>
+    <div class="auth-social">
+      <button>🌐</button><button>🍎</button><button>✈️</button>
+    </div>
+    <div class="auth-footer">قبلاً ثبت‌نام کردی؟ <a href="/login">وارد شو</a></div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+<script>
+function selectType(type) {
+  document.querySelectorAll('.consult-type').forEach(t => t.classList.remove('active'));
+  document.getElementById('type' + (type === 'patient' ? 'Patient' : 'Doctor')).classList.add('active');
+  document.getElementById('userTypeInput').value = type;
+  document.getElementById('doctorFields').style.display = type === 'doctor' ? 'block' : 'none';
+}
+function checkPass(v) {
+  const colors = ['#ef4444','#f97316','#eab308','#22c55e'];
+  const hints  = ['خیلی ضعیف','ضعیف','متوسط','قوی'];
+  let score = 0;
+  if (v.length >= 8)       score++;
+  if (/[A-Z]/.test(v))     score++;
+  if (/[0-9]/.test(v))     score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  ['ps1','ps2','ps3','ps4'].forEach((id, i) => {
+    document.getElementById(id).style.background = i < score ? colors[score-1] : 'var(--border)';
+  });
+  document.getElementById('passHint').textContent = score > 0 ? 'قدرت رمز: ' + hints[score-1] : '';
+}
+</script>
+</body>
+</html>

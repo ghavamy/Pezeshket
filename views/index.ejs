@@ -1,0 +1,197 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">🩺 مراقبت هوشمندانه از سلامتی</div>
+      <h1>پزشک مناسب خودت را<br><b>آنلاین پیدا کن</b></h1>
+      <p class="hero-desc">از میان هزاران پزشک متخصص، بهترین را انتخاب کن، نوبت آنلاین بگیر و با خیال راحت مراقب سلامتت باش.</p>
+      <form class="search-box" action="/doctors" method="GET">
+        <button type="button" style="background:none;border:none;font-size:18px;padding:6px;color:var(--text-muted);">🔍</button>
+        <input type="text" name="q" placeholder="نام پزشک، تخصص یا بیماری را بنویس…" autocomplete="off">
+        <button type="submit" class="btn btn-primary">جست‌وجو</button>
+      </form>
+      <div class="hero-tags">
+        <span>جست‌وجوهای محبوب:</span>
+        <% popularSearches.forEach(s => { %>
+          <a href="/doctors?specialty=<%= encodeURIComponent(s) %>"><%= s %></a>
+        <% }) %>
+        <a href="/online-consult">مشاوره آنلاین</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong data-count="5000">+۵۰۰۰</strong><span>پزشک متخصص</span></div>
+        <div class="hero-stat"><strong data-count="120000">+۱۲۰,۰۰۰</strong><span>نوبت ثبت‌شده</span></div>
+        <div class="hero-stat"><strong data-count="30">+۳۰</strong><span>تخصص پزشکی</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-orb"></div>
+      <div class="hero-emoji">🩺</div>
+      <div class="float-card one"><div class="dot"></div> نوبت آنلاین</div>
+      <div class="float-card two"><div class="dot yellow"></div> مشاوره فوری ۲۴/۷</div>
+      <div class="float-card three">✓ تأییدشده</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRUST STRIP ═══════════════════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <% trustItems.forEach(t => { %>
+    <div class="trust-item">
+      <span class="trust-icon"><%= t.icon %></span>
+      <div><strong><%= t.title %></strong><span><%= t.sub %></span></div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- ══ SPECIALTIES ═══════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-head">
+      <div><span class="overline">دسترسی سریع</span><h2>دنبال چه تخصصی هستی؟</h2></div>
+      <a href="/specialties" class="see-all">همه تخصص‌ها ←</a>
+    </div>
+    <div class="spec-grid">
+      <% specialties.forEach(s => { %>
+      <a href="/doctors?specialty=<%= encodeURIComponent(s.name) %>" class="spec-card">
+        <div class="spec-icon"><%= s.icon %></div>
+        <div><%= s.name %></div>
+        <div class="spec-count"><%= s.count %> پزشک</div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TOP DOCTORS ════════════════════════════════════════════════════════════ -->
+<section class="section tint">
+  <div class="section-inner">
+    <div class="section-head">
+      <div><span class="overline">پیشنهادهای ما</span><h2>پزشکان منتخب</h2></div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="carousel-arrows">
+          <button onclick="scrollCarousel('docCarousel',-1)">›</button>
+          <button onclick="scrollCarousel('docCarousel',1)">‹</button>
+        </div>
+        <a href="/doctors" class="see-all">همه پزشکان ←</a>
+      </div>
+    </div>
+    <div class="carousel" id="docCarousel">
+      <% featuredDoctors.forEach(d => { %>
+      <div class="doc-card">
+        <div class="doc-avatar <%= d.color %>"><%= d.avatar %></div>
+        <h3><%= d.name %></h3>
+        <div class="specialty"><%= d.specialty %></div>
+        <div class="doc-rating">
+          <%= '★'.repeat(Math.round(d.rating)) %><%= '☆'.repeat(5 - Math.round(d.rating)) %>
+          <%= d.rating %> <span>| <%= d.exp %> سال سابقه</span>
+        </div>
+        <div class="doc-card-meta">
+          <small>📍 <%= d.city %></small>
+          <small>💰 <%= d.fee.toLocaleString('fa-IR') %> تومان</small>
+        </div>
+        <a href="/doctors/<%= d.id %>" class="btn btn-primary btn-block btn-sm">مشاهده پروفایل</a>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ONLINE CONSULT PROMO ═══════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="consult-promo-box">
+      <div class="consult-promo-text">
+        <div class="tag" style="background:rgba(255,255,255,.15);color:#fff;margin-bottom:18px;">جدید 🔥</div>
+        <h2 style="color:#fff;font-size:30px;margin-bottom:14px;">مشاوره پزشکی آنلاین<br>هر کجا که هستی</h2>
+        <p style="color:rgba(255,255,255,.85);margin-bottom:24px;">بدون نیاز به حضور، از خانه با پزشک متخصص ارتباط بگیر.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="/online-consult" class="btn btn-outline btn-lg">شروع مشاوره</a>
+          <a href="/online-consult" class="btn btn-lg" style="background:rgba(255,255,255,.15);color:#fff;">بیشتر بدان ←</a>
+        </div>
+      </div>
+      <div class="consult-promo-cards">
+        <% consultTypes.forEach(ct => { %>
+        <div class="consult-promo-card">
+          <div style="font-size:36px;margin-bottom:10px;"><%= ct.icon %></div>
+          <strong style="display:block;margin-bottom:4px;"><%= ct.name %></strong>
+          <span style="font-size:12px;opacity:.8;"><%= ct.sub %></span>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ARTICLES ═══════════════════════════════════════════════════════════════ -->
+<section class="section tint">
+  <div class="section-inner">
+    <div class="section-head">
+      <div><span class="overline">مطالب کاربردی</span><h2>تازه‌های مجله سلامت</h2></div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="carousel-arrows">
+          <button onclick="scrollCarousel('artCarousel',-1)">›</button>
+          <button onclick="scrollCarousel('artCarousel',1)">‹</button>
+        </div>
+        <a href="/articles" class="see-all">آرشیو مطالب ←</a>
+      </div>
+    </div>
+    <div class="carousel" id="artCarousel">
+      <% latestArticles.forEach(a => { %>
+      <div class="article-card" style="min-width:calc(25% - 14px)">
+        <div class="article-cover <%= a.color %>"><%= a.icon %></div>
+        <div class="article-body">
+          <div class="article-cat"><%= a.cat %></div>
+          <h3><%= a.title %></h3>
+          <p><%= a.summary %></p>
+          <div class="article-footer">
+            <a href="/articles/<%= a.id %>" class="read-more">ادامه مطلب ←</a>
+            <time><%= a.date %></time>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-head">
+      <div><span class="overline">تجربه کاربران</span><h2>اونا چی گفتن؟</h2></div>
+    </div>
+    <div class="testimonials-grid">
+      <% testimonials.forEach(t => { %>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div style="width:46px;height:46px;border-radius:50%;background:<%= t.bg %>;display:flex;align-items:center;justify-content:center;font-size:22px;"><%= t.avatar %></div>
+          <div><strong style="display:block;font-size:15px;"><%= t.name %></strong><span style="font-size:12px;color:var(--text-muted);"><%= t.city %></span></div>
+          <div style="margin-right:auto;color:#e5a52b;font-size:14px;">★★★★★</div>
+        </div>
+        <p style="font-size:14px;line-height:1.9;">"<%= t.text %>"</p>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA BANNER ════════════════════════════════════════════════════════════ -->
+<div style="padding:0 5% 60px;max-width:1320px;margin:0 auto;">
+  <div class="cta-banner">
+    <div>
+      <h2>از آگاهی تا مراقبت؛ یک قدم نزدیک‌تر</h2>
+      <p>اطلاعات سلامت را بخوان، پزشک مناسب را پیدا کن و انتخاب آگاهانه‌تری داشته باش.</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="/doctors"  class="btn btn-lg" style="background:#fff;color:var(--blue);">پیدا کردن پزشک</a>
+      <a href="/articles" class="btn btn-outline btn-lg">مطالعه مجله</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

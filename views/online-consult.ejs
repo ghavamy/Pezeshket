@@ -1,0 +1,87 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<section style="background:linear-gradient(130deg,#1e3a8a,#2368e8,#3576e8);padding:70px 0;color:#fff;">
+  <div class="section-inner" style="text-align:center;">
+    <span style="display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:600;padding:7px 16px;border-radius:30px;margin-bottom:18px;">🔥 محبوب‌ترین سرویس</span>
+    <h1 style="color:#fff;font-size:42px;margin-bottom:16px;">مشاوره پزشکی آنلاین<br>هر کجا، هر زمان</h1>
+    <p style="color:rgba(255,255,255,.88);font-size:16px;max-width:520px;margin:0 auto 32px;">بدون نیاز به مراجعه حضوری، از خانه با پزشک متخصص ارتباط بگیر.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="#types" class="btn btn-lg" style="background:#fff;color:var(--blue);">شروع مشاوره</a>
+      <a href="#how"   class="btn btn-outline btn-lg">چطور کار می‌کنه؟</a>
+    </div>
+    <div class="consult-hero-stats">
+      <% heroStats.forEach(s => { %>
+      <div style="text-align:center;"><strong style="font-size:26px;display:block;"><%= s.value %></strong><span style="opacity:.8;font-size:13px;"><%= s.label %></span></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="section-head" style="display:block;text-align:center;margin-bottom:40px;">
+      <span class="overline">نحوه استفاده</span><h2>در ۳ مرحله ساده</h2>
+    </div>
+    <div class="consult-steps">
+      <% steps.forEach(s => { %>
+      <div class="consult-step">
+        <div class="step-num"><%= s.num %></div>
+        <div style="font-size:36px;margin-bottom:12px;"><%= s.icon %></div>
+        <h3 style="margin-bottom:8px;"><%= s.title %></h3>
+        <p style="font-size:13px;"><%= s.desc %></p>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section tint" id="types">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:36px;"><span class="overline">انواع مشاوره</span><h2>روش مشاوره را انتخاب کن</h2></div>
+    <div class="consult-types">
+      <% consultTypes.forEach((t, i) => { %>
+      <div class="consult-type <%= i === 0 ? 'active' : '' %>" onclick="selectType(this)">
+        <div class="type-icon"><%= t.icon %></div>
+        <h3><%= t.name %></h3>
+        <p><%= t.desc %></p>
+        <div class="consult-price"><%= t.price %></div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-head"><div><span class="overline">آنلاین الان</span><h2>پزشکان آماده مشاوره</h2></div><a href="/doctors" class="see-all">همه پزشکان ←</a></div>
+    <div class="online-docs-grid">
+      <% onlineDoctors.forEach(d => { %>
+      <div style="background:#fff;border:1.5px solid <%= d.online ? '#22b6a5' : 'var(--border)' %>;border-radius:16px;padding:22px;display:flex;gap:14px;align-items:center;">
+        <div class="doc-avatar-lg <%= d.color %>"><%= d.avatar %></div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <h3 style="font-size:15px;"><%= d.name %></h3>
+            <% if (d.online) { %><span class="badge badge-green">آنلاین</span>
+            <% } else { %><span class="badge badge-orange">در <%= d.waitMin %> دقیقه</span><% } %>
+          </div>
+          <div style="font-size:13px;color:var(--text-sub);margin-bottom:8px;"><%= d.specialty %></div>
+          <div style="font-size:12px;color:#e5a52b;margin-bottom:10px;"><%= '★'.repeat(Math.round(d.rating)) %> <%= d.rating %></div>
+          <a href="<%= d.online ? '/online-consult#types' : '#' %>" class="btn <%= d.online ? 'btn-teal' : 'btn-ghost' %> btn-sm btn-block">
+            <%= d.online ? 'مشاوره آنلاین' : 'اطلاع‌رسانی' %>
+          </a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<script>
+function selectType(el) {
+  document.querySelectorAll('.consult-type').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+
+<%- include('partials/footer') %>

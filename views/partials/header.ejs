@@ -1,0 +1,43 @@
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="/">پزشکت<span>+</span></a>
+
+    <nav class="nav">
+      <a href="/"              class="<%= currentPath === '/'              ? 'active' : '' %>">خانه</a>
+      <a href="/doctors"       class="<%= currentPath.startsWith('/doctors')     ? 'active' : '' %>">پزشکان</a>
+      <a href="/specialties"   class="<%= currentPath === '/specialties'   ? 'active' : '' %>">تخصص‌ها</a>
+      <a href="/online-consult" class="<%= currentPath === '/online-consult' ? 'active' : '' %>">مشاوره آنلاین</a>
+      <a href="/articles"      class="<%= currentPath.startsWith('/articles')    ? 'active' : '' %>">مجله سلامت</a>
+      <a href="/about"         class="<%= currentPath === '/about'         ? 'active' : '' %>">درباره ما</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/login"    class="btn btn-ghost btn-sm">ورود</a>
+      <a href="/register" class="btn btn-primary btn-sm">ثبت‌نام</a>
+      <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile nav drawer -->
+<div class="mobile-nav" id="mobileNav" onclick="closeMobileNavOutside(event)">
+  <div class="mobile-nav-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <a class="logo" href="/">پزشکت<span>+</span></a>
+      <button onclick="toggleMobileNav()" style="background:var(--bg);border:none;padding:8px;border-radius:8px;cursor:pointer;font-size:18px;">✕</button>
+    </div>
+    <a href="/">🏠 خانه</a>
+    <a href="/doctors">🩺 پزشکان</a>
+    <a href="/specialties">📋 تخصص‌ها</a>
+    <a href="/online-consult">💬 مشاوره آنلاین</a>
+    <a href="/articles">📰 مجله سلامت</a>
+    <a href="/about">ℹ️ درباره ما</a>
+    <a href="/contact">📞 تماس با ما</a>
+    <a href="/faq">❓ سوالات متداول</a>
+    <hr style="border:none;border-top:1px solid var(--border);margin:10px 0;">
+    <a href="/login"    class="btn btn-ghost btn-block" style="margin-bottom:8px;">ورود</a>
+    <a href="/register" class="btn btn-primary btn-block">ثبت‌نام</a>
+  </div>
+</div>

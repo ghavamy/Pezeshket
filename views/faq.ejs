@@ -1,0 +1,59 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">خانه</a><span>/</span><span>سوالات متداول</span></div>
+    <h1>سوالات متداول</h1>
+    <p>پاسخ سوالات رایج درباره پزشکت</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-inner" style="max-width:780px;">
+
+    <!-- Search — GET -->
+    <form action="/faq" method="GET" class="search-box" style="margin-bottom:32px;">
+      <span style="font-size:18px;padding:6px;color:var(--text-muted);">🔍</span>
+      <input type="text" name="q" value="<%= query || '' %>"
+             placeholder="جست‌وجو در سوالات…"
+             style="flex:1;border:none;outline:none;font-family:inherit;font-size:14px;background:transparent;">
+      <button type="submit" class="btn btn-primary btn-sm">جست‌وجو</button>
+    </form>
+
+    <!-- Category filters -->
+    <div class="faq-cats" style="margin-bottom:24px;">
+      <a href="/faq"                    class="faq-cat-btn <%= !cat ? 'active' : '' %>">همه</a>
+      <% cats.forEach(c => { %>
+      <a href="/faq?cat=<%= encodeURIComponent(c.key) %>"
+         class="faq-cat-btn <%= cat === c.key ? 'active' : '' %>"><%= c.label %></a>
+      <% }) %>
+    </div>
+
+    <% if (faqs.length === 0) { %>
+      <p style="text-align:center;color:var(--text-muted);padding:30px;">❌ نتیجه‌ای پیدا نشد</p>
+    <% } else { %>
+    <div class="faq-list">
+      <% faqs.forEach((f, i) => { %>
+      <div class="faq-item <%= i === 0 ? 'open' : '' %>">
+        <div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
+          <%= f.q %> <span class="arrow">⌄</span>
+        </div>
+        <div class="faq-a"><%= f.a %></div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <div style="margin-top:40px;background:var(--bg);border-radius:16px;padding:28px;text-align:center;">
+      <h3 style="margin-bottom:8px;">جواب سوالت رو پیدا نکردی؟</h3>
+      <p style="font-size:14px;margin-bottom:20px;">تیم پشتیبانی ما آماده کمک است.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/contact" class="btn btn-primary">تماس با ما</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<%- include('partials/footer') %>

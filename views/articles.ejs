@@ -1,0 +1,91 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">خانه</a><span>/</span><span>مجله سلامت</span></div>
+    <h1>مجله سلامت پزشکت</h1>
+    <p>مطالب علمی و کاربردی درباره سلامت، تغذیه و سبک زندگی</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-inner">
+
+    <!-- Category tabs — GET form -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px;">
+      <a href="/articles" class="faq-cat-btn <%= !currentCat ? 'active' : '' %>">همه مطالب</a>
+      <% categories.forEach(cat => { %>
+      <a href="/articles?cat=<%= encodeURIComponent(cat.name) %>"
+         class="faq-cat-btn <%= currentCat === cat.name ? 'active' : '' %>">
+        <%= cat.icon %> <%= cat.name %>
+      </a>
+      <% }) %>
+    </div>
+
+    <div class="articles-layout">
+      <!-- Main -->
+      <div>
+        <div class="articles-main-grid">
+          <% articles.forEach(a => { %>
+          <div class="article-card">
+            <div class="article-cover <%= a.color %>"><%= a.icon %></div>
+            <div class="article-body">
+              <div class="article-cat"><%= a.cat %></div>
+              <h3><%= a.title %></h3>
+              <p><%= a.summary %></p>
+              <div class="article-footer">
+                <a href="/articles/<%= a.id %>" class="read-more">ادامه مطلب ←</a>
+                <time><%= a.date %> | <%= a.readtime %></time>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% if (articles.length === 0) { %>
+          <p style="text-align:center;padding:40px;color:var(--text-muted);">مطلبی در این دسته‌بندی پیدا نشد</p>
+        <% } %>
+      </div>
+
+      <!-- Sidebar -->
+      <aside>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
+          <h4 style="margin-bottom:16px;">پربازدیدترین</h4>
+          <div class="articles-sidebar">
+            <% popular.forEach(a => { %>
+            <a href="/articles/<%= a.id %>" class="article-small">
+              <div class="article-small-thumb <%= a.color %>"><%= a.icon %></div>
+              <div class="article-small-body">
+                <h4><%= a.title %></h4>
+                <span><%= a.date %> | <%= a.readtime %></span>
+              </div>
+            </a>
+            <% }) %>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
+          <h4 style="margin-bottom:14px;">دسته‌بندی‌ها</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <% categories.forEach(cat => { %>
+            <a href="/articles?cat=<%= encodeURIComponent(cat.name) %>" class="badge badge-blue" style="cursor:pointer;padding:6px 14px;">
+              <%= cat.name %>
+            </a>
+            <% }) %>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--blue),#4388f7);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+          <div style="font-size:36px;margin-bottom:10px;">📩</div>
+          <h4 style="color:#fff;margin-bottom:8px;">خبرنامه سلامت</h4>
+          <p style="font-size:13px;opacity:.88;margin-bottom:16px;">آخرین مطالب را در ایمیلت دریافت کن.</p>
+          <form action="/api/newsletter" method="POST">
+            <input type="email" name="email" placeholder="ایمیل شما" style="width:100%;font-family:inherit;padding:10px;border-radius:9px;border:none;outline:none;font-size:13px;margin-bottom:10px;">
+            <button class="btn btn-block" type="submit" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);">عضویت</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>

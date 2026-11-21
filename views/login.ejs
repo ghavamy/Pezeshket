@@ -1,0 +1,124 @@
+<%- include('partials/head') %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <a class="logo" href="/">پزشکت<span>+</span></a>
+    </div>
+    <h2>خوش اومدی!</h2>
+    <p class="subtitle">با شماره موبایل یا ایمیل وارد شو</p>
+
+    <!-- Tab toggle -->
+    <div style="display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:24px;" id="loginTabs">
+      <button class="btn" id="tabPhone" onclick="switchTab('phone')"
+              style="flex:1;background:var(--blue);color:#fff;border-radius:9px;">موبایل</button>
+      <button class="btn" id="tabEmail" onclick="switchTab('email')"
+              style="flex:1;background:transparent;color:var(--text-muted);">ایمیل</button>
+    </div>
+
+    <!-- Phone / OTP -->
+    <div id="loginPhone">
+      <div id="stepPhone">
+        <div class="form-group">
+          <label>شماره موبایل</label>
+          <div class="input-icon-wrap">
+            <span class="icon">📱</span>
+            <input type="tel" id="phoneNum" placeholder="۰۹۱۲۰۰۰۰۰۰۰"
+                   style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px 12px 40px;outline:none;">
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" onclick="sendOtp()">ارسال کد تأیید</button>
+      </div>
+      <div id="stepOtp" style="display:none;">
+        <p style="text-align:center;font-size:14px;margin-bottom:20px;">
+          کد ارسال‌شده به <strong id="otpPhone"></strong> را وارد کن
+        </p>
+        <div class="otp-inputs" style="margin-bottom:20px;">
+          <input type="text" maxlength="1" oninput="otpNext(this)" onkeydown="otpBack(event,this)">
+          <input type="text" maxlength="1" oninput="otpNext(this)" onkeydown="otpBack(event,this)">
+          <input type="text" maxlength="1" oninput="otpNext(this)" onkeydown="otpBack(event,this)">
+          <input type="text" maxlength="1" oninput="otpNext(this)" onkeydown="otpBack(event,this)">
+          <input type="text" maxlength="1" oninput="otpNext(this)" onkeydown="otpBack(event,this)">
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" onclick="verifyOtp()">تأیید و ورود</button>
+        <p style="text-align:center;font-size:13px;margin-top:14px;color:var(--text-muted);">
+          کد را نگرفتی؟
+          <a href="#" style="color:var(--blue);" onclick="showToast('کد مجدداً ارسال شد','success');return false;">ارسال مجدد</a>
+        </p>
+        <p style="text-align:center;font-size:13px;">
+          <a href="#" onclick="document.getElementById('stepOtp').style.display='none';document.getElementById('stepPhone').style.display='block';return false;"
+             style="color:var(--text-muted);">← تغییر شماره</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Email / Password -->
+    <div id="loginEmail" style="display:none;">
+      <form method="POST" action="/login">
+        <div class="form-group">
+          <label>ایمیل</label>
+          <div class="input-icon-wrap">
+            <span class="icon">📧</span>
+            <input type="email" name="email" placeholder="example@email.com"
+                   style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px 12px 40px;outline:none;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>رمز عبور</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" name="password" placeholder="رمز عبور"
+                   style="width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px 12px 40px;outline:none;">
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;">
+            <input type="checkbox" name="remember"> مرا به خاطر بسپار
+          </label>
+          <a href="#" style="font-size:13px;color:var(--blue);">فراموشی رمز</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">ورود</button>
+      </form>
+    </div>
+
+    <div class="auth-divider">یا</div>
+    <div class="auth-social">
+      <button title="گوگل">🌐</button>
+      <button title="اپل">🍎</button>
+      <button title="تلگرام">✈️</button>
+    </div>
+    <div class="auth-footer">حساب نداری؟ <a href="/register">ثبت‌نام کن</a></div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+<script>
+function switchTab(tab) {
+  document.getElementById('loginPhone').style.display = tab === 'phone' ? 'block' : 'none';
+  document.getElementById('loginEmail').style.display = tab === 'email' ? 'block' : 'none';
+  document.getElementById('tabPhone').style.cssText = tab === 'phone'
+    ? 'flex:1;background:var(--blue);color:#fff;border-radius:9px;'
+    : 'flex:1;background:transparent;color:var(--text-muted);';
+  document.getElementById('tabEmail').style.cssText = tab === 'email'
+    ? 'flex:1;background:var(--blue);color:#fff;border-radius:9px;'
+    : 'flex:1;background:transparent;color:var(--text-muted);';
+}
+function sendOtp() {
+  const phone = document.getElementById('phoneNum').value.trim();
+  if (!phone) { showToast('شماره موبایل را وارد کن', 'error'); return; }
+  document.getElementById('otpPhone').textContent = phone;
+  document.getElementById('stepPhone').style.display = 'none';
+  document.getElementById('stepOtp').style.display   = 'block';
+  document.querySelector('.otp-inputs input').focus();
+  showToast('کد تأیید ارسال شد', 'success');
+}
+function otpNext(el) { if (el.value && el.nextElementSibling) el.nextElementSibling.focus(); }
+function otpBack(e, el) { if (e.key === 'Backspace' && !el.value && el.previousElementSibling) el.previousElementSibling.focus(); }
+function verifyOtp() {
+  const code = [...document.querySelectorAll('.otp-inputs input')].map(i => i.value).join('');
+  if (code.length < 5) { showToast('کد کامل را وارد کن', 'error'); return; }
+  showToast('ورود موفق!', 'success');
+  setTimeout(() => location.href = '/', 1200);
+}
+</script>
+</body></html>

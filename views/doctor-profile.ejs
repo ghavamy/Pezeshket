@@ -1,0 +1,213 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="profile-hero">
+  <div class="section-inner">
+    <div class="breadcrumb">
+      <a href="/">خانه</a><span>/</span>
+      <a href="/doctors">پزشکان</a><span>/</span>
+      <span><%= doctor.name %></span>
+    </div>
+    <div class="profile-header">
+      <div class="profile-avatar"><%= doctor.avatar %></div>
+      <div class="profile-info">
+        <h1><%= doctor.name %></h1>
+        <span class="spec-tag">متخصص <%= doctor.specialty %></span>
+        <div class="profile-meta">
+          <span class="profile-meta-item">⭐ <%= doctor.rating %></span>
+          <span class="profile-meta-item">🕐 <%= doctor.exp %> سال تجربه</span>
+          <span class="profile-meta-item">📍 <%= doctor.city %></span>
+          <span class="profile-meta-item">
+            <% if (doctor.available) { %>
+              <span class="badge badge-green">نوبت دارد</span>
+            <% } else { %>
+              <span class="badge badge-red">نوبت ندارد</span>
+            <% } %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-inner">
+    <div class="profile-layout">
+
+      <!-- Main content -->
+      <div>
+        <div class="profile-tabs">
+          <div class="profile-tab active" onclick="switchTab('about')">درباره پزشک</div>
+          <div class="profile-tab" onclick="switchTab('schedule')">زمان‌بندی</div>
+          <div class="profile-tab" onclick="switchTab('reviews')">نظرات (<%= doctor.reviews.length %>)</div>
+          <div class="profile-tab" onclick="switchTab('info')">اطلاعات مطب</div>
+        </div>
+
+        <!-- About -->
+        <div class="profile-tab-content active" id="tab-about">
+          <h3 style="margin-bottom:12px;">معرفی</h3>
+          <p style="font-size:15px;line-height:2;"><%= doctor.about %></p>
+          <hr class="divider">
+          <h3 style="margin-bottom:14px;">تخصص‌ها</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+            <% doctor.skills.forEach(sk => { %>
+            <span class="badge badge-blue"><%= sk %></span>
+            <% }) %>
+          </div>
+          <hr class="divider">
+          <h3 style="margin-bottom:14px;">تحصیلات</h3>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <% doctor.education.forEach(edu => { %>
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--blue);margin-top:6px;flex-shrink:0;"></div>
+              <p style="margin:0;font-size:14px;"><%= edu %></p>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Schedule -->
+        <div class="profile-tab-content" id="tab-schedule">
+          <h3 style="margin-bottom:16px;">انتخاب روز و ساعت</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+            <% availableDays.forEach((day, i) => { %>
+            <div class="time-slot <%= day.busy ? 'busy' : '' %>" onclick="<%= !day.busy ? `selectDay(this,'${day.label}')` : '' %>">
+              <%= day.name %><br><small><%= day.label %></small>
+            </div>
+            <% }) %>
+          </div>
+          <h3 style="margin-bottom:12px;">ساعت‌های خالی</h3>
+          <div class="time-slots">
+            <% timeSlots.forEach(t => { %>
+            <div class="time-slot <%= t.busy ? 'busy' : '' %>" onclick="<%= !t.busy ? `selectTime(this,'${t.time}')` : '' %>">
+              <%= t.time %>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="profile-tab-content" id="tab-reviews">
+          <% if (doctor.reviews.length === 0) { %>
+            <p style="text-align:center;padding:30px;color:var(--text-muted);">هنوز نظری ثبت نشده</p>
+          <% } else { %>
+            <% doctor.reviews.forEach(r => { %>
+            <div class="review-card">
+              <div class="rev-header">
+                <span class="rev-name"><%= r.name %></span>
+                <span class="rev-stars"><%= '★'.repeat(r.stars) %><%= '☆'.repeat(5 - r.stars) %></span>
+              </div>
+              <p><%= r.text %></p>
+              <small style="color:var(--text-muted);"><%= r.date %></small>
+            </div>
+            <% }) %>
+          <% } %>
+        </div>
+
+        <!-- Info -->
+        <div class="profile-tab-content" id="tab-info">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:12px;">
+              <div style="font-size:24px;">📍</div>
+              <div><strong style="display:block;margin-bottom:4px;">آدرس</strong><span style="font-size:14px;color:var(--text-sub);"><%= doctor.address %></span></div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:12px;">
+              <div style="font-size:24px;">📞</div>
+              <div><strong style="display:block;margin-bottom:4px;">تلفن</strong><span style="font-size:14px;color:var(--text-sub);"><%= doctor.phone %></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking sidebar -->
+      <div class="profile-aside">
+        <div class="booking-card">
+          <h3>رزرو نوبت</h3>
+          <div class="booking-price">
+            <%= doctor.fee.toLocaleString('fa-IR') %> <small>تومان / ویزیت</small>
+          </div>
+          <form id="bookingForm" data-docid="<%= doctor.id %>">
+            <div class="form-group">
+              <label>نام و نام خانوادگی</label>
+              <input type="text" id="bName" placeholder="نام شما" required>
+            </div>
+            <div class="form-group">
+              <label>شماره موبایل</label>
+              <input type="tel" id="bPhone" placeholder="۰۹۱۲۰۰۰۰۰۰۰" required>
+            </div>
+            <div class="form-group">
+              <label>تاریخ</label>
+              <select id="bDate">
+                <% availableDays.filter(d => !d.busy).forEach(d => { %>
+                <option><%= d.label %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ساعت</label>
+              <select id="bTime">
+                <% timeSlots.filter(t => !t.busy).forEach(t => { %>
+                <option><%= t.time %></option>
+                <% }) %>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:4px;">ثبت نوبت</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <div style="text-align:center;padding:10px 0;">
+      <div style="font-size:60px;margin-bottom:16px;">🎉</div>
+      <h3 style="margin-bottom:8px;">نوبت شما ثبت شد!</h3>
+      <p id="confirmMsg" style="font-size:14px;margin-bottom:20px;"></p>
+      <div id="confirmRef" style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:20px;font-size:14px;font-weight:600;color:var(--blue);"></div>
+      <button class="btn btn-primary btn-block" onclick="closeModal('confirmModal')">باشه، ممنون!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.profile-tab-content').forEach(t => t.classList.remove('active'));
+  const tabs = ['about', 'schedule', 'reviews', 'info'];
+  document.querySelectorAll('.profile-tab')[tabs.indexOf(name)].classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+function selectDay(el, day) {
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('bDate').value = day;
+}
+function selectTime(el, time) {
+  document.querySelectorAll('#tab-schedule .time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('bTime').value = time;
+}
+document.getElementById('bookingForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const body = {
+    doctorId: form.dataset.docid,
+    name:     document.getElementById('bName').value.trim(),
+    phone:    document.getElementById('bPhone').value.trim(),
+    date:     document.getElementById('bDate').value,
+    time:     document.getElementById('bTime').value,
+  };
+  if (!body.name || !body.phone) { showToast('لطفاً همه فیلدها را پر کنید', 'error'); return; }
+  const res  = await fetch('/api/appointment', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  const data = await res.json();
+  document.getElementById('confirmMsg').textContent  = 'نوبت شما برای <%= doctor.name %> ثبت شد.';
+  document.getElementById('confirmRef').textContent  = 'کد پیگیری: ' + data.ref;
+  openModal('confirmModal');
+});
+</script>
+
+<%- include('partials/footer') %>

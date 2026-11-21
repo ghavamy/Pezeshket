@@ -1,0 +1,76 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="page-hero about-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">خانه</a><span>/</span><span>درباره ما</span></div>
+    <h1>درباره پزشکت</h1>
+    <p>پلتفرم جامع سلامت آنلاین، ساخته‌شده برای مراقبت بهتر</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="about-mission-grid">
+      <div>
+        <span class="overline">ماموریت ما</span>
+        <h2 style="margin:8px 0 16px;">سلامت برای همه، نه فقط برخی</h2>
+        <p style="font-size:15px;line-height:2.1;"><%= mission %></p>
+        <div style="display:flex;gap:14px;margin-top:24px;">
+          <a href="/doctors"       class="btn btn-primary">پیدا کردن پزشک</a>
+          <a href="/online-consult" class="btn btn-ghost">مشاوره آنلاین</a>
+        </div>
+      </div>
+      <div class="about-icon-grid">
+        <% missionCards.forEach(c => { %>
+        <div style="background:linear-gradient(135deg,<%= c.bg1 %>,<%= c.bg2 %>);border-radius:18px;padding:30px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:10px;"><%= c.icon %></div>
+          <strong style="font-size:15px;display:block;"><%= c.label %></strong>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="section-inner">
+    <div class="stat-row">
+      <% stats.forEach(s => { %>
+      <div class="stat-box" style="background:<%= s.color %>;"><strong><%= s.value %></strong><span><%= s.label %></span></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:36px;"><span class="overline">ارزش‌های ما</span><h2>چیزی که برامون مهمه</h2></div>
+    <div class="values-grid">
+      <% values.forEach(v => { %>
+      <div class="value-card">
+        <div class="value-icon"><%= v.icon %></div>
+        <h3 style="margin-bottom:8px;"><%= v.title %></h3>
+        <p style="font-size:13px;"><%= v.desc %></p>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:36px;"><span class="overline">تیم ما</span><h2>افرادی که پزشکت را می‌سازند</h2></div>
+    <div class="team-grid">
+      <% team.forEach(m => { %>
+      <div class="team-card">
+        <div class="team-avatar"><%= m.avatar %></div>
+        <h3><%= m.name %></h3>
+        <div class="role"><%= m.role %></div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

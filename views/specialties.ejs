@@ -1,0 +1,49 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">خانه</a><span>/</span><span>تخصص‌ها</span></div>
+    <h1>همه تخصص‌های پزشکی</h1>
+    <p>از میان <%= specialties.length %>+ تخصص، پزشکان متخصص را پیدا کن</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-inner">
+
+    <form action="/specialties" method="GET" style="max-width:500px;margin:0 auto 32px;">
+      <div class="search-box">
+        <span style="font-size:18px;padding:6px;color:var(--text-muted);">🔍</span>
+        <input type="text" name="q" placeholder="جست‌وجوی تخصص…" value="<%= query || '' %>"
+               style="flex:1;border:none;outline:none;font-family:inherit;font-size:14px;background:transparent;">
+        <button type="submit" class="btn btn-primary btn-sm">جست‌وجو</button>
+      </div>
+    </form>
+
+    <!-- Category filters -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;">
+      <a href="/specialties" class="faq-cat-btn <%= !cat ? 'active' : '' %>">همه</a>
+      <% cats.forEach(c => { %>
+      <a href="/specialties?cat=<%= encodeURIComponent(c) %>" class="faq-cat-btn <%= cat === c ? 'active' : '' %>"><%= c %></a>
+      <% }) %>
+    </div>
+
+    <div class="spec-page-grid">
+      <% specialties.forEach(s => { %>
+      <a href="/doctors?specialty=<%= encodeURIComponent(s.name) %>" class="spec-page-card">
+        <div class="big-icon"><%= s.icon %></div>
+        <h3><%= s.name %></h3>
+        <p><%= s.desc %></p>
+        <span class="doc-count"><%= s.count %> پزشک</span>
+      </a>
+      <% }) %>
+    </div>
+
+    <% if (specialties.length === 0) { %>
+    <p style="text-align:center;padding:40px;color:var(--text-muted);">تخصصی یافت نشد</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

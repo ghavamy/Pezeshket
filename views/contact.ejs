@@ -1,0 +1,65 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">خانه</a><span>/</span><span>تماس با ما</span></div>
+    <h1>تماس با ما</h1>
+    <p>هر سوالی داری، اینجاییم</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="contact-form-box">
+        <h2 style="margin-bottom:6px;">پیام بفرست</h2>
+        <p style="font-size:14px;margin-bottom:28px;">در اسرع وقت پاسخت رو می‌دیم.</p>
+
+        <% if (locals.success) { %>
+        <div style="background:#e4f7ef;border:1px solid #22b6a5;border-radius:12px;padding:16px;margin-bottom:20px;color:#1a7a5e;">✓ پیام شما دریافت شد. به زودی پاسخ می‌دهیم.</div>
+        <% } %>
+        <% if (locals.error) { %>
+        <div style="background:#fdeaea;border:1px solid #d93a3a;border-radius:12px;padding:16px;margin-bottom:20px;color:#d93a3a;">⚠️ <%= error %></div>
+        <% } %>
+
+        <form method="POST" action="/contact">
+          <div class="form-row">
+            <div class="form-group"><label>نام</label><input type="text" name="firstName" placeholder="نام شما" required></div>
+            <div class="form-group"><label>نام خانوادگی</label><input type="text" name="lastName" placeholder="نام خانوادگی"></div>
+          </div>
+          <div class="form-group"><label>ایمیل</label><input type="email" name="email" placeholder="example@email.com" required></div>
+          <div class="form-group"><label>شماره تماس</label><input type="tel" name="phone" placeholder="۰۹۱۲۰۰۰۰۰۰۰"></div>
+          <div class="form-group">
+            <label>موضوع</label>
+            <select name="subject">
+              <% subjects.forEach(s => { %><option><%= s %></option><% }) %>
+            </select>
+          </div>
+          <div class="form-group"><label>پیام</label><textarea name="message" rows="5" placeholder="پیامت را اینجا بنویس…" required></textarea></div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg">ارسال پیام</button>
+        </form>
+      </div>
+
+      <div>
+        <div class="contact-info-box" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:20px;">راه‌های ارتباطی</h3>
+          <% contactInfo.forEach(ci => { %>
+          <div class="contact-info-item">
+            <div class="contact-info-icon"><%= ci.icon %></div>
+            <div><strong><%= ci.label %></strong><span><%- ci.value %></span></div>
+          </div>
+          <% }) %>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--teal),#1a9e8e);border-radius:16px;padding:24px;color:#fff;text-align:center;">
+          <div style="font-size:40px;margin-bottom:10px;">💬</div>
+          <h3 style="color:#fff;margin-bottom:8px;">چت آنلاین</h3>
+          <p style="opacity:.9;font-size:14px;margin-bottom:16px;">اکنون آنلاین هستیم.</p>
+          <button class="btn btn-block" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);" onclick="showToast('چت در حال بارگذاری است…')">شروع چت</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

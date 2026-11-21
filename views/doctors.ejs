@@ -1,0 +1,113 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">خانه</a><span>/</span><span>پزشکان</span></div>
+    <h1>پیدا کردن پزشک</h1>
+    <p>از میان <%= allDoctors.length %> پزشک متخصص، بهترین را برای خودت انتخاب کن</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-inner">
+
+    <!-- Filter Bar — GET form, server-side filtering -->
+    <form class="filter-bar" method="GET" action="/doctors" id="filterForm">
+      <div class="filter-group" style="flex:2;">
+        <label>جست‌وجو</label>
+        <input type="text" name="q" placeholder="نام پزشک یا تخصص…" value="<%= query.q || '' %>">
+      </div>
+      <div class="filter-group">
+        <label>تخصص</label>
+        <select name="specialty">
+          <option value="">همه تخصص‌ها</option>
+          <% specialtyList.forEach(s => { %>
+          <option value="<%= s %>" <%= query.specialty === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>شهر</label>
+        <select name="city">
+          <option value="">همه شهرها</option>
+          <% cityList.forEach(c => { %>
+          <option value="<%= c %>" <%= query.city === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>مرتب‌سازی</label>
+        <select name="sort">
+          <option value="rating"   <%= query.sort === 'rating'   ? 'selected' : '' %>>بیشترین امتیاز</option>
+          <option value="exp"      <%= query.sort === 'exp'      ? 'selected' : '' %>>بیشترین تجربه</option>
+          <option value="fee_asc"  <%= query.sort === 'fee_asc'  ? 'selected' : '' %>>کمترین هزینه</option>
+          <option value="fee_desc" <%= query.sort === 'fee_desc' ? 'selected' : '' %>>بیشترین هزینه</option>
+        </select>
+      </div>
+      <div class="filter-group" style="min-width:auto;flex:none;">
+        <label>&nbsp;</label>
+        <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+      </div>
+    </form>
+
+    <!-- Active filter chips -->
+    <% if (query.q || query.specialty || query.city) { %>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;align-items:center;">
+      <span style="font-size:13px;color:var(--text-muted);">فیلتر فعال:</span>
+      <% if (query.q) { %>
+        <span class="badge badge-blue">جست‌وجو: <%= query.q %> <a href="/doctors?<%= new URLSearchParams({...query, q:''}).toString() %>" style="margin-right:4px;">✕</a></span>
+      <% } %>
+      <% if (query.specialty) { %>
+        <span class="badge badge-blue"><%= query.specialty %> <a href="/doctors?<%= new URLSearchParams({...query, specialty:''}).toString() %>" style="margin-right:4px;">✕</a></span>
+      <% } %>
+      <% if (query.city) { %>
+        <span class="badge badge-blue"><%= query.city %> <a href="/doctors?<%= new URLSearchParams({...query, city:''}).toString() %>" style="margin-right:4px;">✕</a></span>
+      <% } %>
+      <a href="/doctors" style="font-size:13px;color:var(--text-muted);">پاک کردن همه</a>
+    </div>
+    <% } %>
+
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:18px;">نمایش <strong><%= doctors.length %></strong> پزشک</p>
+
+    <% if (doctors.length === 0) { %>
+      <div style="text-align:center;padding:60px;color:var(--text-muted);">
+        <div style="font-size:60px;margin-bottom:16px;">🔍</div>
+        <h3>پزشکی با این مشخصات پیدا نشد</h3>
+        <a href="/doctors" class="btn btn-ghost" style="margin-top:16px;">نمایش همه پزشکان</a>
+      </div>
+    <% } else { %>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <% doctors.forEach(d => { %>
+      <div class="doctor-card-full">
+        <div class="doc-avatar-lg <%= d.color %>"><%= d.avatar %></div>
+        <div class="doc-info">
+          <h3><%= d.name %></h3>
+          <div class="specialty"><%= d.specialty %></div>
+          <div class="doc-city">📍 <%= d.city %></div>
+          <div class="rating-row">
+            <span class="stars"><%= '★'.repeat(Math.round(d.rating)) %><%= '☆'.repeat(5-Math.round(d.rating)) %></span>
+            <span><%= d.rating %></span>
+            <span style="color:var(--text-muted);font-size:12px;">| <%= d.exp %> سال تجربه</span>
+            <% if (d.available) { %>
+              <span class="badge badge-green">نوبت دارد</span>
+            <% } else { %>
+              <span class="badge badge-red">نوبت ندارد</span>
+            <% } %>
+          </div>
+          <p style="font-size:13px;margin-top:6px;"><%= d.about %></p>
+        </div>
+        <div class="doc-actions">
+          <div class="fee"><%= d.fee.toLocaleString('fa-IR') %> <small>تومان / ویزیت</small></div>
+          <a href="/doctors/<%= d.id %>" class="btn btn-primary btn-sm">مشاهده و رزرو</a>
+          <a href="/online-consult"      class="btn btn-ghost btn-sm">مشاوره آنلاین</a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>

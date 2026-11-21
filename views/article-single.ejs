@@ -1,0 +1,88 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<div class="section">
+  <div class="section-inner">
+    <div class="article-single-layout">
+
+      <article>
+        <div class="breadcrumb" style="color:var(--text-muted);margin-bottom:24px;">
+          <a href="/">خانه</a><span>/</span>
+          <a href="/articles">مجله سلامت</a><span>/</span>
+          <span><%= article.title.substring(0, 35) %>…</span>
+        </div>
+
+        <div class="article-cover <%= article.color %>" style="height:280px;border-radius:18px;margin-bottom:28px;font-size:90px;">
+          <%= article.icon %>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+          <span class="badge badge-blue"><%= article.cat %></span>
+          <span style="font-size:13px;color:var(--text-muted);">📅 <%= article.date %></span>
+          <span style="font-size:13px;color:var(--text-muted);">⏱ <%= article.readtime %> مطالعه</span>
+        </div>
+
+        <h1 style="font-size:28px;line-height:1.6;margin-bottom:20px;"><%= article.title %></h1>
+
+        <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg);border-radius:12px;margin-bottom:28px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:22px;">👨‍⚕️</div>
+          <div>
+            <strong style="font-size:14px;display:block;"><%= article.author %></strong>
+            <span style="font-size:12px;color:var(--text-muted);">نویسنده مقاله</span>
+          </div>
+          <a href="/doctors/<%= article.authorId %>" class="btn btn-ghost btn-sm" style="margin-right:auto;">مشاهده پروفایل</a>
+        </div>
+
+        <div class="article-content">
+          <%- article.content %>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border);">
+          <span style="font-size:14px;font-weight:600;">اشتراک‌گذاری:</span>
+          <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(location.href).then(()=>showToast('لینک کپی شد ✓','success'))">🔗 کپی لینک</button>
+          <button class="btn btn-ghost btn-sm">✈️ تلگرام</button>
+        </div>
+
+        <% if (related.length > 0) { %>
+        <div style="margin-top:40px;">
+          <h3 style="margin-bottom:20px;">مطالب مرتبط</h3>
+          <div class="related-articles-grid">
+            <% related.forEach(r => { %>
+            <a href="/articles/<%= r.id %>" class="article-card">
+              <div class="article-cover <%= r.color %>" style="height:100px;font-size:40px;"><%= r.icon %></div>
+              <div class="article-body">
+                <div class="article-cat"><%= r.cat %></div>
+                <h3><%= r.title %></h3>
+              </div>
+            </a>
+            <% }) %>
+          </div>
+        </div>
+        <% } %>
+      </article>
+
+      <aside>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;">
+          <h4 style="margin-bottom:14px;">جدیدترین مطالب</h4>
+          <div class="articles-sidebar">
+            <% recent.forEach(a => { %>
+            <a href="/articles/<%= a.id %>" class="article-small">
+              <div class="article-small-thumb <%= a.color %>"><%= a.icon %></div>
+              <div class="article-small-body"><h4><%= a.title %></h4><span><%= a.date %></span></div>
+            </a>
+            <% }) %>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--blue),#4388f7);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+          <div style="font-size:36px;margin-bottom:10px;">🩺</div>
+          <h4 style="color:#fff;margin-bottom:8px;">نیاز به مشاوره داری؟</h4>
+          <p style="font-size:13px;opacity:.88;margin-bottom:16px;">با یک پزشک متخصص صحبت کن.</p>
+          <a href="/online-consult" class="btn btn-block" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);">مشاوره آنلاین</a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
