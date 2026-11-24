@@ -1,21 +1,25 @@
 <footer class="footer">
   <div class="footer-top">
+
+    <!-- Brand -->
     <div class="footer-brand">
       <a class="logo" href="/">پزشکت<span>+</span></a>
-      <p>پزشکت یک پلتفرم جامع سلامت آنلاین است. پزشک مورد نظرتان را پیدا کنید، نوبت بگیرید و با متخصصان مشاوره آنلاین داشته باشید.</p>
+      <p>پلتفرم جامع سلامت آنلاین. پزشک مورد نظرتان را پیدا کنید، نوبت بگیرید و مشاوره آنلاین داشته باشید.</p>
       <div class="footer-social">
-        <a href="#" title="اینستاگرام">📷</a>
-        <a href="#" title="تلگرام">✈️</a>
-        <a href="#" title="توییتر">🐦</a>
-        <a href="#" title="لینکدین">💼</a>
+        <a href="#" title="اینستاگرام" aria-label="اینستاگرام">📷</a>
+        <a href="#" title="تلگرام"     aria-label="تلگرام">✈️</a>
+        <a href="#" title="توییتر"     aria-label="توییتر">🐦</a>
+        <a href="#" title="لینکدین"    aria-label="لینکدین">💼</a>
       </div>
-      <div class="footer-app-badges" style="margin-top:18px;">
+      <div class="footer-app-badges">
         <a class="app-badge" href="#"><span class="app-icon">🍎</span><span>App Store</span></a>
         <a class="app-badge" href="#"><span class="app-icon">🤖</span><span>Google Play</span></a>
       </div>
     </div>
-    <div class="footer-col">
-      <h4>خدمات</h4>
+
+    <!-- Services -->
+    <div class="footer-col" id="fc1">
+      <h4 onclick="toggleFooterCol('fc1')">خدمات</h4>
       <ul>
         <li><a href="/doctors">پیدا کردن پزشک</a></li>
         <li><a href="/online-consult">مشاوره آنلاین</a></li>
@@ -23,8 +27,10 @@
         <li><a href="/articles">مجله سلامت</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h4>اطلاعات</h4>
+
+    <!-- Info -->
+    <div class="footer-col" id="fc2">
+      <h4 onclick="toggleFooterCol('fc2')">اطلاعات</h4>
       <ul>
         <li><a href="/about">درباره ما</a></li>
         <li><a href="/contact">تماس با ما</a></li>
@@ -32,8 +38,10 @@
         <li><a href="#">حریم خصوصی</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h4>تماس</h4>
+
+    <!-- Contact -->
+    <div class="footer-col" id="fc3">
+      <h4 onclick="toggleFooterCol('fc3')">تماس</h4>
       <ul>
         <li><a href="tel:02100000000">📞 ۰۲۱-۰۰۰۰۰۰۰۰</a></li>
         <li><a href="mailto:info@pezeshket.com">📧 info@pezeshket.com</a></li>
@@ -41,11 +49,13 @@
         <li><a href="#">⏰ ۹ تا ۲۱ هر روز</a></li>
       </ul>
     </div>
+
   </div>
+
   <div class="footer-bottom">
     <div class="footer-bottom-inner">
       <span>© ۱۴۰۵ پزشکت — تمامی حقوق محفوظ است</span>
-      <div style="display:flex;gap:16px;">
+      <div>
         <a href="#">قوانین استفاده</a>
         <a href="#">حریم خصوصی</a>
         <a href="/about">درباره ما</a>

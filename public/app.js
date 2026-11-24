@@ -1,68 +1,199 @@
+/* ══════════════════════════════════════════════════════════════
+   app.js — پزشکت
+══════════════════════════════════════════════════════════════ */
+
+// ─── Mobile nav drawer ───────────────────────────────────────────────────────
+function toggleMobileNav() {
+  const overlay = document.getElementById('mobileNav');
+  const hamburger = document.getElementById('hamburger');
+  if (!overlay) return;
+  const isOpen = overlay.classList.contains('open');
+  if (isOpen) {
+    overlay.classList.remove('open');
+    hamburger && hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  } else {
+    overlay.classList.add('open');
+    hamburger && hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeMobileNavOutside(e) {
+  // close only when clicking the dark backdrop (not the panel itself)
+  if (e.target === document.getElementById('mobileNav')) {
+    toggleMobileNav();
+  }
+}
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('mobileNav');
+    if (overlay && overlay.classList.contains('open')) toggleMobileNav();
+  }
+});
+
+// ─── Footer collapsible columns (mobile) ─────────────────────────────────────
+function toggleFooterCol(id) {
+  // only act on mobile
+  if (window.innerWidth > 768) return;
+  const col = document.getElementById(id);
+  if (!col) return;
+  col.classList.toggle('open');
+}
+
 // ─── Carousel scroll ─────────────────────────────────────────────────────────
 function scrollCarousel(id, dir) {
   const el = document.getElementById(id);
-  if (el) el.scrollBy({ left: dir * 360, behavior: "smooth" });
+  if (el) el.scrollBy({ left: dir * 320, behavior: 'smooth' });
 }
 
-// ─── Hero search ──────────────────────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  const heroSearch = document.getElementById("heroSearch");
-  if (heroSearch) {
-    heroSearch.addEventListener("submit", e => {
-      e.preventDefault();
-      const q = document.getElementById("heroQ").value.trim();
-      if (q) window.location.href = "/doctors?q=" + encodeURIComponent(q);
-    });
+// ─── Doctor profile tabs ─────────────────────────────────────────────────────
+function switchTab(el, name) {
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const content = document.getElementById('tab-' + name);
+  if (content) content.classList.add('active');
+}
+
+// ─── Day / time slot selection ───────────────────────────────────────────────
+function selectDay(el) {
+  document.querySelectorAll('.day-slot').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectTime(el) {
+  if (el.classList.contains('busy')) return;
+  document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ─── Booking form submit ──────────────────────────────────────────────────────
+function bookAppointment(doctorId) {
+  const selectedDay  = document.querySelector('.day-slot.selected');
+  const selectedTime = document.querySelector('.time-slot.selected');
+  const name  = document.getElementById('bookName')?.value.trim();
+  const phone = document.getElementById('bookPhone')?.value.trim();
+
+  if (!selectedDay || !selectedTime || !name || !phone) {
+    showToast('لطفاً همه موارد را تکمیل کنید', 'error');
+    return;
   }
 
-  // Animate hero stats
-  animateCounters();
-
-  // Intersection observer for fade-in sections
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = "1";
-        entry.target.style.transform = "translateY(0)";
+  fetch('/api/appointment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      doctorId,
+      name,
+      phone,
+      date: selectedDay.dataset.date,
+      time: selectedTime.textContent.trim()
+    })
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        showToast('نوبت شما با کد ' + data.ref + ' ثبت شد ✓', 'success');
+        document.getElementById('bookingModal')?.classList.remove('open');
+      } else {
+        showToast(data.error || 'خطایی رخ داد', 'error');
       }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll(".section").forEach(s => {
-    s.style.opacity = "0";
-    s.style.transform = "translateY(24px)";
-    s.style.transition = "opacity .5s ease, transform .5s ease";
-    observer.observe(s);
-  });
-});
-
-// ─── Animate number counters ─────────────────────────────────────────────────
-function animateCounters() {
-  document.querySelectorAll(".hero-stat strong").forEach(el => {
-    const text = el.textContent.replace(/[^0-9]/g, "");
-    if (!text) return;
-    const target = parseInt(text);
-    const prefix = el.textContent.replace(/[0-9,،]/g, "").trim();
-    let current = 0;
-    const step = Math.ceil(target / 60);
-    const interval = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = "+" + current.toLocaleString("fa-IR");
-      if (current >= target) clearInterval(interval);
-    }, 25);
-  });
+    })
+    .catch(() => showToast('خطا در ارسال اطلاعات', 'error'));
 }
+
+// ─── Modal open/close ─────────────────────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id)?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id)?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ─── Toast notification ───────────────────────────────────────────────────────
+function showToast(msg, type = '') {
+  let toast = document.getElementById('globalToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'globalToast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.className = 'toast' + (type ? ' ' + type : '');
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+// ─── FAQ accordion ───────────────────────────────────────────────────────────
+document.addEventListener('click', e => {
+  const q = e.target.closest('.faq-q');
+  if (!q) return;
+  const item = q.closest('.faq-item');
+  if (!item) return;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+});
 
 // ─── Scroll-to-top button ─────────────────────────────────────────────────────
 (function () {
-  const btn = document.createElement("button");
-  btn.textContent = "↑";
-  btn.title = "بازگشت به بالا";
-  btn.style.cssText = "position:fixed;bottom:24px;left:24px;width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(35,104,232,.3);opacity:0;transition:opacity .3s;z-index:50;";
+  const isMobile = () => window.innerWidth <= 768;
+  const btn = document.createElement('button');
+  btn.textContent = '↑';
+  btn.title = 'بازگشت به بالا';
+  btn.setAttribute('aria-label', 'بازگشت به بالا');
+  btn.style.cssText = [
+    'position:fixed',
+    'bottom:80px',   /* above bottom nav on mobile */
+    'left:16px',
+    'width:42px',
+    'height:42px',
+    'border-radius:50%',
+    'background:var(--primary)',
+    'color:#fff',
+    'border:none',
+    'font-size:19px',
+    'cursor:pointer',
+    'box-shadow:0 4px 16px rgba(13,191,140,.35)',
+    'opacity:0',
+    'transition:opacity .3s',
+    'z-index:50',
+  ].join(';');
   document.body.appendChild(btn);
-  window.addEventListener("scroll", () => {
-    btn.style.opacity = window.scrollY > 400 ? "1" : "0";
-    btn.style.pointerEvents = window.scrollY > 400 ? "all" : "none";
+
+  window.addEventListener('scroll', () => {
+    const show = window.scrollY > 400;
+    btn.style.opacity = show ? '1' : '0';
+    btn.style.pointerEvents = show ? 'all' : 'none';
+    // On desktop move closer to bottom corner
+    btn.style.bottom = isMobile() ? '80px' : '24px';
   });
-  btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 })();
+
+// ─── Init on DOM ready ────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Fade-in sections on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.section').forEach(s => {
+    s.style.opacity = '0';
+    s.style.transform = 'translateY(20px)';
+    s.style.transition = 'opacity .45s ease, transform .45s ease';
+    observer.observe(s);
+  });
+});

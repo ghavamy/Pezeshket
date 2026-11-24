@@ -3,41 +3,70 @@
     <a class="logo" href="/">پزشکت<span>+</span></a>
 
     <nav class="nav">
-      <a href="/"              class="<%= currentPath === '/'              ? 'active' : '' %>">خانه</a>
-      <a href="/doctors"       class="<%= currentPath.startsWith('/doctors')     ? 'active' : '' %>">پزشکان</a>
-      <a href="/specialties"   class="<%= currentPath === '/specialties'   ? 'active' : '' %>">تخصص‌ها</a>
-      <a href="/online-consult" class="<%= currentPath === '/online-consult' ? 'active' : '' %>">مشاوره آنلاین</a>
-      <a href="/articles"      class="<%= currentPath.startsWith('/articles')    ? 'active' : '' %>">مجله سلامت</a>
-      <a href="/about"         class="<%= currentPath === '/about'         ? 'active' : '' %>">درباره ما</a>
+      <a href="/"               class="<%= currentPath === '/'               ? 'active' : '' %>">خانه</a>
+      <a href="/doctors"        class="<%= currentPath.startsWith('/doctors') ? 'active' : '' %>">پزشکان</a>
+      <a href="/specialties"    class="<%= currentPath === '/specialties'     ? 'active' : '' %>">تخصص‌ها</a>
+      <a href="/online-consult" class="<%= currentPath === '/online-consult'  ? 'active' : '' %>">مشاوره آنلاین</a>
+      <a href="/articles"       class="<%= currentPath.startsWith('/articles')? 'active' : '' %>">مجله سلامت</a>
+      <a href="/about"          class="<%= currentPath === '/about'           ? 'active' : '' %>">درباره ما</a>
     </nav>
 
     <div class="header-actions">
       <a href="/login"    class="btn btn-ghost btn-sm">ورود</a>
       <a href="/register" class="btn btn-primary btn-sm">ثبت‌نام</a>
-      <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+      <div class="hamburger" id="hamburger" aria-label="منو" role="button" onclick="toggleMobileNav()">
         <span></span><span></span><span></span>
       </div>
     </div>
   </div>
 </header>
 
-<!-- Mobile nav drawer -->
+<!-- ── Mobile nav drawer (slides from right) ─────────────────────── -->
 <div class="mobile-nav" id="mobileNav" onclick="closeMobileNavOutside(event)">
-  <div class="mobile-nav-panel">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <div class="mobile-nav-panel" id="mobileNavPanel">
+
+    <div class="mobile-nav-header">
       <a class="logo" href="/">پزشکت<span>+</span></a>
-      <button onclick="toggleMobileNav()" style="background:var(--bg);border:none;padding:8px;border-radius:8px;cursor:pointer;font-size:18px;">✕</button>
+      <button class="mobile-nav-close" onclick="toggleMobileNav()" aria-label="بستن منو">✕</button>
     </div>
-    <a href="/">🏠 خانه</a>
-    <a href="/doctors">🩺 پزشکان</a>
-    <a href="/specialties">📋 تخصص‌ها</a>
-    <a href="/online-consult">💬 مشاوره آنلاین</a>
-    <a href="/articles">📰 مجله سلامت</a>
-    <a href="/about">ℹ️ درباره ما</a>
-    <a href="/contact">📞 تماس با ما</a>
-    <a href="/faq">❓ سوالات متداول</a>
-    <hr style="border:none;border-top:1px solid var(--border);margin:10px 0;">
-    <a href="/login"    class="btn btn-ghost btn-block" style="margin-bottom:8px;">ورود</a>
-    <a href="/register" class="btn btn-primary btn-block">ثبت‌نام</a>
+
+    <div class="mobile-nav-links">
+      <a href="/"               class="<%= currentPath === '/'                ? 'active' : '' %>"><span class="nav-icon">🏠</span>خانه</a>
+      <a href="/doctors"        class="<%= currentPath.startsWith('/doctors') ? 'active' : '' %>"><span class="nav-icon">🩺</span>پزشکان</a>
+      <a href="/specialties"    class="<%= currentPath === '/specialties'     ? 'active' : '' %>"><span class="nav-icon">📋</span>تخصص‌ها</a>
+      <a href="/online-consult" class="<%= currentPath === '/online-consult'  ? 'active' : '' %>"><span class="nav-icon">💬</span>مشاوره آنلاین</a>
+      <a href="/articles"       class="<%= currentPath.startsWith('/articles')? 'active' : '' %>"><span class="nav-icon">📰</span>مجله سلامت</a>
+      <hr class="mobile-nav-divider">
+      <a href="/about"          class="<%= currentPath === '/about'           ? 'active' : '' %>"><span class="nav-icon">ℹ️</span>درباره ما</a>
+      <a href="/contact"        class="<%= currentPath === '/contact'         ? 'active' : '' %>"><span class="nav-icon">📞</span>تماس با ما</a>
+      <a href="/faq"            class="<%= currentPath === '/faq'             ? 'active' : '' %>"><span class="nav-icon">❓</span>سوالات متداول</a>
+    </div>
+
+    <div class="mobile-nav-footer">
+      <a href="/login"    class="btn btn-ghost btn-block">ورود</a>
+      <a href="/register" class="btn btn-primary btn-block">ثبت‌نام رایگان</a>
+    </div>
+
   </div>
 </div>
+
+<!-- ── Bottom navigation bar (mobile) ────────────────────────────── -->
+<nav class="bottom-nav" aria-label="ناوبری اصلی">
+  <div class="bottom-nav-items">
+    <a href="/"               class="bottom-nav-item <%= currentPath === '/'               ? 'active' : '' %>">
+      <span class="bn-icon">🏠</span><span>خانه</span>
+    </a>
+    <a href="/doctors"        class="bottom-nav-item <%= currentPath.startsWith('/doctors') ? 'active' : '' %>">
+      <span class="bn-icon">🩺</span><span>پزشکان</span>
+    </a>
+    <a href="/online-consult" class="bottom-nav-item cta-item">
+      <span class="bn-icon">💬</span><span>مشاوره</span>
+    </a>
+    <a href="/specialties"    class="bottom-nav-item <%= currentPath === '/specialties'     ? 'active' : '' %>">
+      <span class="bn-icon">📋</span><span>تخصص‌ها</span>
+    </a>
+    <a href="/articles"       class="bottom-nav-item <%= currentPath.startsWith('/articles')? 'active' : '' %>">
+      <span class="bn-icon">📰</span><span>مجله</span>
+    </a>
+  </div>
+</nav>
